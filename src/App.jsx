@@ -15,6 +15,12 @@ function App() {
       text: "lorem adasdasdlorem",
       state: "unchecked",
     },
+    {
+      id: 2,
+      category: "Work",
+      text: "lфывфывфывorem adasdasdlorem",
+      state: "unchecked",
+    },
   ];
 
   const [category, setCategory] = useState("");
@@ -37,13 +43,10 @@ function App() {
     } = e.target;
     const objIndex = data.findIndex((obj) => obj.id == index);
     const newData = data.map((obj) => {
-      if (obj.id === objIndex) {
-        console.log(obj);
-        if (obj.state === "unchecked") {
+      if (obj.id === objIndex && obj.state === "unchecked") {
           return { ...obj, state: "checked" };
-        } else if (obj.state === "create") {
+      } else if (obj.id === objIndex && obj.state === "create") {
           return { ...obj, state: "unchecked" };
-        }
       }
       return obj;
     });
@@ -54,10 +57,12 @@ function App() {
   const deleteTodo = (e) => {
   const {dataset: {index}} = e.target
   console.log(index);
-    setData((current) =>
-      current.filter((obj) => obj.id !== index)
-    ); 
-    console.log(data);
+  const newData = data.filter((obj) => obj.id != index) 
+    // setData((current) =>
+    //   current.filter((obj) => obj.id !== index)
+    // ); 
+    console.log(newData);
+    setData(newData)
   }
   return (
     <>
