@@ -1,8 +1,8 @@
 import s from "./RadioBtn.module.css";
 import cslx from "clsx"
-export default function RadioBtn({ onClick, state = "unchecked", data }) {
+export default function RadioBtn({ onClick, state = "unchecked", data, className}) {
   return (
-    <div  onClick={onClick} className={cslx(s.radioContainer, {[s.radioDelete]: state === "delete"})}>
+    <div  onClick={onClick} className={cslx(s.radioContainer, className, {[s.radioDelete]: state === "delete", [s.radioEdit]: state === "edit"})}>
       {state === "unchecked" && (
         <div data-index={data} className={s.radio}>
           <img src="./unchecked.svg" className={s.img}/>
@@ -18,6 +18,10 @@ export default function RadioBtn({ onClick, state = "unchecked", data }) {
           )}
       {state === "delete" && (
           <img data-index={data} src="./remove.svg" className={s.imgDelete}/>
+        
+      )}
+      {state === "edit" && (
+          <img data-index={data} src="./edit.svg" className={s.imgEdit}/>
         
       )}
     </div>

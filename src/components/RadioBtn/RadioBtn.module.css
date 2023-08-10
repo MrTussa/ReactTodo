@@ -1,5 +1,5 @@
 .radioContainer {
-    padding: 5px 5px 0 5px;
+    padding-top: 5px;
 }
 .radio:hover::before {
     content: url("/hover.svg");
@@ -12,9 +12,16 @@
     height: 25px;
 }
 .imgDelete {
-    width: 35px;
-    height: 35px;
+    width: 27px;
+    height: 27px;
+}
+.imgEdit {
+    width: 27px;
+    height: 27px;
 }
 .radioDelete {
+    padding: 0;
+}
+.radioEdit {
     padding: 0;
 }
