@@ -69,7 +69,7 @@ function App() {
 		})
 		setList(newArray)
     filterState(newArray)
-		// setOpen(false)
+		setOpen(false)
 	}
   const dropdownHandler = () => {
 		setOpen(prev => {
@@ -92,7 +92,7 @@ function App() {
   //filter state
 
   const filterState = (newArray) => {
-    let  value  = newArray.filter(item => item.checked)[0].value
+    let value = newArray.filter(item => item.checked)[0].value
     switch(value) {
       case "inProgress":
         value = "unchecked"
@@ -103,7 +103,7 @@ function App() {
     }
     const newData = data.filter(item => item.state === value)
     setFilteredData(newData)
-  }
+  };
 
   //filter state
   const inputChange = (e) => {
@@ -124,12 +124,14 @@ function App() {
     const objIndex = data.findIndex((obj) => obj.id == index);
     const newData = data.map((obj) =>
       obj.id === objIndex && obj.state === "unchecked"
-        ? { ...obj, state: "checked" } 
-        : obj
-    );
+      ? { ...obj, state: "checked" } 
+      : obj
+      );
     setData(newData);
-    filterState(list)
   };
+  useEffect(() => {
+    filterState(list);
+  }, [data, list]);
   const deleteTodo = (e) => {
     const {
       dataset: { index },
