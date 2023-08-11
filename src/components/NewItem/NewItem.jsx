@@ -8,13 +8,15 @@ export default function NewItem({
   inputChange,
   id,
   deleteTodo,
-  categoryData,
+  categoryId,
+  categoryData
 }) {
   const [edit, setEdit] = useState(false);
   const editTodo = () => {
     setEdit(!edit);
   };
-  const { text, color } = categoryData;
+  const category = categoryData.filter((item) => item.id === categoryId)
+  const { color, text } = category[0]
   return (
     <div className={s.itemContainer}>
       <RadioBtn

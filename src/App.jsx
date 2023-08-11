@@ -5,32 +5,32 @@ function App() {
   const startData = [
     {
       id: 0,
-      category: { text: "work", color: "255, 200, 200" },
+      categoryId: 0,
       text: "lorem lorem",
       state: "unchecked",
     },
     {
       id: 1,
-      category: { text: "work", color: "255, 200, 200" },
-      text: "lorem adasdasdlorem",
+      categoryId: 0,
+      text: "один",
       state: "unchecked",
     },
     {
       id: 2,
-      category: { text: "home", color: "255, 200, 200" },
-      text: "lфывфывфывorem adasdasdlorem",
+      categoryId: 1,
+      text: "два",
       state: "unchecked",
     },
     {
       id: 3,
-      category: { text: "work", color: "255, 200, 200" },
-      text: "lфывфывфывorem adasdasdlorem",
+      categoryId: 0,
+      text: "три",
       state: "checked",
     },
     {
       id: 4,
-      category: { text: "work", color: "255, 200, 200" },
-      text: "lфывфывфывorem adasdasdlorem",
+      categoryId: 0,
+      text: "четыре",
       state: "removed",
     },
   ];
@@ -191,7 +191,24 @@ function App() {
   //Category Filter
 
   //Add item
-  
+  const addItem = ( category, text ) => {
+    const newItem = {
+      id: data[-1].id + 1,
+      category: { 
+        text: category.text,
+        color: category.color,
+       },
+       text: text,
+       state: "unchecked"
+    }
+    setData(...data, newItem)
+  }
+  // {
+  //   id: 4,
+  //   category: { text: "work", color: "255, 200, 200" },
+  //   text: "четыре",
+  //   state: "removed",
+  // },
   //Add item
   useEffect(() => {
     filterState(list);
@@ -225,6 +242,7 @@ function App() {
         </div>
         <List
           data={filteredData}
+          categories={category}
           inputChange={inputChange}
           onClickState={changeStateHandler}
           deleteTodo={deleteTodo}
