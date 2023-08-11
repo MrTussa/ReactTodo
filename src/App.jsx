@@ -5,38 +5,38 @@ function App() {
   const startData = [
     {
       id: 0,
-      category: "work",
+      category: {text: "work",
+      color: "255, 200, 200",},
       text: "lorem lorem",
       state: "unchecked",
-      
     },
     {
       id: 1,
-      category: "work",
+      category: {text: "work",
+      color: "255, 200, 200",},
       text: "lorem adasdasdlorem",
       state: "unchecked",
-      
     },
     {
       id: 2,
-      category: "work",
+      category: {text: "work",
+      color: "255, 200, 200",},
       text: "lфывфывфывorem adasdasdlorem",
       state: "unchecked",
-      
     },
     {
       id: 3,
-      category: "work",
+      category: {text: "work",
+      color: "255, 200, 200",},
       text: "lфывфывфывorem adasdasdlorem",
       state: "checked",
-      
     },
     {
       id: 4,
-      category: "work",
+      category: {text: "work",
+      color: "255, 200, 200",},
       text: "lфывфывфывorem adasdasdlorem",
       state: "removed",
-      
     },
   ];
   const startCategory = [
@@ -176,8 +176,15 @@ function App() {
   };
   //Click buttons
 
-  const categoryClickHandler = () => {
-    return "asdasd";
+  const categoryClickHandler = (e) => {
+    const {
+      dataset: { index },
+    } = e.target;
+    const objIndex = category.findIndex((obj) => obj.id == index);
+    const newData = data.map((obj) =>
+      obj.id === objIndex ? { ...obj, text: value } : obj
+    );
+    setData(newData);
   };
   useEffect(() => {
     filterState(list);
@@ -188,14 +195,15 @@ function App() {
         <div className="nav">
           <div className="category">
             {category.map(({ id, text, color, state }) => {
-              return(
-              <CategoryItem
-                id={id} 
-                text={text}
-                color={color}
-                categoryClick={categoryClickHandler}
-                state={state}
-              />)
+              return (
+                <CategoryItem
+                  id={id}
+                  text={text}
+                  color={color}
+                  categoryClick={categoryClickHandler}
+                  state={state}
+                />
+              );
             })}
           </div>
           <ListNav
@@ -213,6 +221,7 @@ function App() {
           inputChange={inputChange}
           onClickState={changeStateHandler}
           deleteTodo={deleteTodo}
+          
         ></List>
       </div>
     </>

@@ -1,13 +1,13 @@
 import s from "./List.module.css";
 import { NewItem } from "../../components";
-export default function List({ children, data, inputChange, onClickState, deleteTodo }) {
+export default function List({children, data, inputChange, onClickState, deleteTodo }) {
   return (
     <>
       <ul className={s.list}>
-        {data.map(({text, state, id}) => {
+        {data.map(({text, state, id, category}) => {
           return (
             <li key={id} className={s.listItem}>
-              <NewItem id={id} content={text} inputChange={inputChange} btnState={state} onClickState={onClickState} deleteTodo={deleteTodo}></NewItem>
+              <NewItem id={id} content={text} inputChange={inputChange} btnState={state} onClickState={onClickState} deleteTodo={deleteTodo} categoryData={category}></NewItem>
             </li>
           );
         })}
