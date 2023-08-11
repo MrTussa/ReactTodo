@@ -5,36 +5,31 @@ function App() {
   const startData = [
     {
       id: 0,
-      category: {text: "work",
-      color: "255, 200, 200",},
+      category: { text: "work", color: "255, 200, 200" },
       text: "lorem lorem",
       state: "unchecked",
     },
     {
       id: 1,
-      category: {text: "work",
-      color: "255, 200, 200",},
+      category: { text: "work", color: "255, 200, 200" },
       text: "lorem adasdasdlorem",
       state: "unchecked",
     },
     {
       id: 2,
-      category: {text: "work",
-      color: "255, 200, 200",},
+      category: { text: "home", color: "255, 200, 200" },
       text: "lфывфывфывorem adasdasdlorem",
       state: "unchecked",
     },
     {
       id: 3,
-      category: {text: "work",
-      color: "255, 200, 200",},
+      category: { text: "work", color: "255, 200, 200" },
       text: "lфывфывфывorem adasdasdlorem",
       state: "checked",
     },
     {
       id: 4,
-      category: {text: "work",
-      color: "255, 200, 200",},
+      category: { text: "work", color: "255, 200, 200" },
       text: "lфывфывфывorem adasdasdlorem",
       state: "removed",
     },
@@ -54,7 +49,6 @@ function App() {
     },
   ];
   const [category, setCategory] = useState(startCategory);
-  const [currCategory, setCurrCategory] = useState("");
   const [data, setData] = useState(startData);
   const [filteredData, setFilteredData] = useState(data);
   //DropdownList
@@ -119,7 +113,12 @@ function App() {
         break;
     }
     const newData = data.filter((item) => item.state === value);
-    setFilteredData(newData);
+    const currentCategory = category.filter((item) => item.state === true)
+    console.log(currentCategory);
+    const categoryFilter = currentCategory.length > 0  ? newData.filter((item) => item.category.text === currentCategory[0].text) : undefined
+    console.log(categoryFilter)
+    categoryFilter === undefined ? setFilteredData(newData) : setFilteredData(categoryFilter)
+    
   };
   //filter state
 
@@ -163,7 +162,7 @@ function App() {
     const {
       dataset: { index },
     } = e.target;
-    // const newData = data.filter((obj) => obj.id != index); Old delte without saving
+    // const newData = data.filter((obj) => obj.id !== index); Old delte without saving
     const objIndex = data.findIndex((obj) => obj.id == index);
     const newData = data.map((obj) => {
       if (obj.id === objIndex && obj.state !== "removed") {
@@ -176,19 +175,27 @@ function App() {
   };
   //Click buttons
 
+  //Category Filter
   const categoryClickHandler = (e) => {
     const {
       dataset: { index },
     } = e.target;
     const objIndex = category.findIndex((obj) => obj.id == index);
-    const newData = data.map((obj) =>
-      obj.id === objIndex ? { ...obj, text: value } : obj
-    );
-    setData(newData);
+    const newObj = category.map((item) => {
+      return item.id === objIndex
+        ? { ...item, state: !item.checked }
+        : { ...item, state: false }; 
+    });
+    setCategory(newObj);
   };
+  //Category Filter
+
+  //Add item
+  
+  //Add item
   useEffect(() => {
     filterState(list);
-  }, [data, list]);
+  }, [data, list, category]);
   return (
     <>
       <div className="container">
@@ -221,7 +228,6 @@ function App() {
           inputChange={inputChange}
           onClickState={changeStateHandler}
           deleteTodo={deleteTodo}
-          
         ></List>
       </div>
     </>

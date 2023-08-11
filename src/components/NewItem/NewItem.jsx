@@ -15,7 +15,6 @@ export default function NewItem({
     setEdit(!edit);
   };
   const { text, color } = categoryData;
-  console.log(categoryData);
   return (
     <div className={s.itemContainer}>
       <RadioBtn
