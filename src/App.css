@@ -5,3 +5,11 @@
   color: #323232;
   position: relative;
 }
+.nav {
+
+}
+.category {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}

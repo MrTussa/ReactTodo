@@ -1,5 +1,6 @@
 .radioContainer {
     padding-top: 5px;
+    cursor: pointer;
 }
 .radio:hover::before {
     content: url("/hover.svg");
