@@ -29,12 +29,10 @@ export default function ListNav({
   onClickItem,
   dref,
   selected,
-  filter
 }) {
   return (
     <div className={s.listContainer}>
       <div ref={dref}>
-        {/* <Button onClick={onClick}>{selected}</Button> */}
         <button onClick={onClick} className={clsx(s.button)}>
 			{selected}
 		</button>
@@ -44,7 +42,9 @@ export default function ListNav({
               return (
                 <li
                   onClick={() => {
-                    onClickItem(item.id);
+                    if(item.checked === false) {
+                      onClickItem(item.id) 
+                    }
                   }}
                   key={item.id}
                   className={clsx(s.item, {[s.itemChecked]: item.checked === true})}
