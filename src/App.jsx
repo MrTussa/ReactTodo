@@ -77,7 +77,7 @@ function App() {
     const newArray = list.map((item) => {
       return item.id === id
         ? { ...item, checked: !item.checked }
-        : { ...item, checked: false }; //TODO: Исправить повторный клик на checked !!!ВЫЗЫВАЕТ ОШИБКИ
+        : { ...item, checked: false };
     });
     setList(newArray);
     filterState(newArray);
@@ -103,22 +103,21 @@ function App() {
 
   //filter state
   const filterState = (newArray) => {
-    let value = newArray.filter((item) => item.checked)[0].value;
-    switch (value) {
-      case "inProgress":
-        value = "unchecked";
-        break;
-      case "completed":
-        value = "checked";
-        break;
-    }
+    let value = newArray.find((item) => item.checked)?.value;
+    value =
+      value === "inProgress"
+        ? "unchecked"
+        : value === "completed"
+        ? "checked"
+        : value;
     const newData = data.filter((item) => item.state === value);
-    const currentCategory = category.filter((item) => item.state === true)
-    console.log(currentCategory);
-    const categoryFilter = currentCategory.length > 0  ? newData.filter((item) => item.category.text === currentCategory[0].text) : undefined
-    console.log(categoryFilter)
-    categoryFilter === undefined ? setFilteredData(newData) : setFilteredData(categoryFilter)
-    
+    const currentCategory = category.find((item) => item.state === true);
+    const categoryFilter = currentCategory
+      ? newData.filter((item) => item.categoryId === currentCategory.id)
+      : undefined;
+    categoryFilter === undefined
+      ? setFilteredData(newData)
+      : setFilteredData(categoryFilter);
   };
   //filter state
 
@@ -143,33 +142,25 @@ function App() {
     } = e.target;
     const objIndex = data.findIndex((obj) => obj.id == index);
     const newData = data.map((obj) => {
-      //Without checked click
-      // obj.id === objIndex && obj.state === "unchecked"
-      // ? { ...obj, state: "checked" }
-      // : obj
-      if (obj.id === objIndex && obj.state === "unchecked") {
-        return { ...obj, state: "checked" };
-      } else if (obj.id === objIndex && obj.state === "checked") {
-        return { ...obj, state: "unchecked" };
-      } else {
-        return obj;
+      if (obj.id === objIndex) {
+        return {
+          ...obj,
+          state: obj.state === "unchecked" ? "checked" : "unchecked",
+        };
       }
+      return obj;
     });
     setData(newData);
   };
-
   const deleteTodo = (e) => {
     const {
       dataset: { index },
     } = e.target;
-    // const newData = data.filter((obj) => obj.id !== index); Old delte without saving
     const objIndex = data.findIndex((obj) => obj.id == index);
     const newData = data.map((obj) => {
-      if (obj.id === objIndex && obj.state !== "removed") {
-        return { ...obj, state: "removed" };
-      } else {
-        return obj;
-      }
+      return obj.id === objIndex && obj.state !== "removed"
+        ? { ...obj, state: "removed" }
+        : obj;
     });
     setData(newData);
   };
@@ -177,32 +168,29 @@ function App() {
 
   //Category Filter
   const categoryClickHandler = (e) => {
-    const {
-      dataset: { index },
-    } = e.target;
+    const index = e.target.dataset.index;
     const objIndex = category.findIndex((obj) => obj.id == index);
-    const newObj = category.map((item) => {
-      return item.id === objIndex
-        ? { ...item, state: !item.checked }
-        : { ...item, state: false }; 
-    });
+    const newObj = category.map((item) => ({
+      ...item,
+      state: item.id === objIndex ? !item.checked : false,
+    }));
     setCategory(newObj);
   };
   //Category Filter
 
   //Add item
-  const addItem = ( category, text ) => {
+  const addItem = (category, text) => {
     const newItem = {
       id: data[-1].id + 1,
-      category: { 
+      category: {
         text: category.text,
         color: category.color,
-       },
-       text: text,
-       state: "unchecked"
-    }
-    setData(...data, newItem)
-  }
+      },
+      text: text,
+      state: "unchecked",
+    };
+    setData(...data, newItem);
+  };
   // {
   //   id: 4,
   //   category: { text: "work", color: "255, 200, 200" },

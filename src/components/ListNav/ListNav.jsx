@@ -1,27 +1,5 @@
-// import s from "./ListNav.module.css";
-// import { useState } from 'react';
-// export default function ListNav({ data, onClickList, onClickListItem,  }) {
-//   return (
-//     <>
-//       <div className={s.listNav}>
-//       <div
-//         className="ListNavigation-ellipsis"
-//         onClick={handleListNav}
-//       >
-//         <div className="ListNavigation-ellipsis--default">
-//           <img src="./Three\dots.svg"/>
-//         </div>
-//       </div>
-//       <ul className="ListNavigation-items">
-        
-//       </ul>
-//       </div>
-//     </>
-//   );
-// }
-
 import s from "./ListNav.module.css";
-import clsx from "clsx"
+import clsx from "clsx";
 export default function ListNav({
   array,
   open,
@@ -34,20 +12,22 @@ export default function ListNav({
     <div className={s.listContainer}>
       <div ref={dref}>
         <button onClick={onClick} className={clsx(s.button)}>
-			{selected}
-		</button>
+          {selected}
+        </button>
         {open && (
           <ul className={s.items}>
             {array.map((item) => {
               return (
                 <li
                   onClick={() => {
-                    if(item.checked === false) {
-                      onClickItem(item.id) 
+                    if (item.checked === false) {
+                      onClickItem(item.id);
                     }
                   }}
                   key={item.id}
-                  className={clsx(s.item, {[s.itemChecked]: item.checked === true})}
+                  className={clsx(s.item, {
+                    [s.itemChecked]: item.checked === true,
+                  })}
                 >
                   {item.value}
                 </li>
@@ -58,4 +38,4 @@ export default function ListNav({
       </div>
     </div>
   );
-};
+}
