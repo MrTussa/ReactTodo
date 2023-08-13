@@ -1,6 +1,7 @@
 import "./App.css";
 import { List, ListNav, CategoryItem } from "./components";
 import { useState, useRef, useEffect } from "react";
+import AddItemForm from "./components/AddItemForm";
 function App() {
   const startData = [
     {
@@ -51,6 +52,9 @@ function App() {
   const [category, setCategory] = useState(startCategory);
   const [data, setData] = useState(startData);
   const [filteredData, setFilteredData] = useState(data);
+  const [select, setSelect] = useState("")
+  const [date, setDate] = useState(new Date())
+  const [text, setText] = useState("")
   //DropdownList
   const [list, setList] = useState([
     {
@@ -70,7 +74,7 @@ function App() {
     },
   ]);
   const dropdownRef = useRef(null);
-
+  
   const [open, setOpen] = useState(false);
   const currentType = list.filter((item) => item.checked)[0].value;
   const onClickItem = (id) => {
@@ -182,22 +186,31 @@ function App() {
   const addItem = (category, text) => {
     const newItem = {
       id: data[-1].id + 1,
-      category: {
-        text: category.text,
-        color: category.color,
-      },
+      category: category.id,
       text: text,
       state: "unchecked",
     };
     setData(...data, newItem);
   };
-  // {
-  //   id: 4,
-  //   category: { text: "work", color: "255, 200, 200" },
-  //   text: "четыре",
-  //   state: "removed",
-  // },
-  //Add item
+  //AddItem
+
+  const selectHandler = (choise) => {
+    setSelect(choise.value);
+  };
+  const textHandler = (e) => {
+    setText(e.target.value);
+  };
+  const dateHandler = (e) => {
+    setDate(e)
+  }
+  const optionFormat = () => {
+    const categories = category.map(({text}) => {
+      return {value: text, label: text}
+    })
+    return categories
+  }
+  optionFormat()
+  //AddItem
   useEffect(() => {
     filterState(list);
   }, [data, list, category]);
@@ -235,6 +248,7 @@ function App() {
           onClickState={changeStateHandler}
           deleteTodo={deleteTodo}
         ></List>
+        <AddItemForm options={optionFormat} selectHandler={selectHandler} dateHandler={dateHandler} submitHandler={addItem} textHandler={textHandler} dateSelected={date}/>
       </div>
     </>
   );
