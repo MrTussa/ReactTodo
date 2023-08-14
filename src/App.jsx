@@ -107,6 +107,7 @@ function App() {
 
   //filter state
   const filterState = (newArray) => {
+    console.log(data);
     let value = newArray.find((item) => item.checked)?.value;
     value =
       value === "inProgress"
@@ -116,6 +117,7 @@ function App() {
         : value;
     const newData = data.filter((item) => item.state === value);
     const currentCategory = category.find((item) => item.state === true);
+    console.log(filteredData);
     const categoryFilter = currentCategory
       ? newData.filter((item) => item.categoryId === currentCategory.id)
       : undefined;
@@ -183,19 +185,21 @@ function App() {
   //Category Filter
 
   //Add item
-  const addItem = (category, text) => {
+  const addItem = () => {
     const newItem = {
-      id: data[-1].id + 1,
-      category: category.id,
+      id: data[data.length - 1].id + 1,
+      categoryId: select,
       text: text,
       state: "unchecked",
     };
-    setData(...data, newItem);
+    setData([...data, newItem]);
+    console.log(newItem);
   };
   //AddItem
 
   const selectHandler = (choise) => {
     setSelect(choise.value);
+    console.log(choise.value);
   };
   const textHandler = (e) => {
     setText(e.target.value);
@@ -204,12 +208,10 @@ function App() {
     setDate(e)
   }
   const optionFormat = () => {
-    const categories = category.map(({text}) => {
+    return category.map(({text}) => {
       return {value: text, label: text}
     })
-    return categories
   }
-  optionFormat()
   //AddItem
   useEffect(() => {
     filterState(list);
@@ -248,7 +250,7 @@ function App() {
           onClickState={changeStateHandler}
           deleteTodo={deleteTodo}
         ></List>
-        <AddItemForm options={optionFormat} selectHandler={selectHandler} dateHandler={dateHandler} submitHandler={addItem} textHandler={textHandler} dateSelected={date}/>
+        <AddItemForm options={optionFormat()} selectHandler={selectHandler} dateHandler={dateHandler} submitHandler={addItem} textHandler={textHandler} dateSelected={date}/>
       </div>
     </>
   );

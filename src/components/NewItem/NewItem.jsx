@@ -15,7 +15,9 @@ export default function NewItem({
   const editTodo = () => {
     setEdit(!edit);
   };
+
   const category = categoryData.filter((item) => item.id === categoryId);
+  console.log(categoryId);
   const { color, text } = category[0];
   return (
     <div className={s.itemContainer}>

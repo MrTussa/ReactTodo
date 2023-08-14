@@ -7,7 +7,6 @@ import clsx from "clsx"
 import "react-datepicker/dist/react-datepicker.css";
 import s from "./AddItemForm.module.css";
 export default function AddItemForm({ options, selectHandler, dateHandler, dateSelected , submitHandler, textHandler}) {
-
   return (
     <div  className={s.form}>
       <div className={s.formColumn}>
