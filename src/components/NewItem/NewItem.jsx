@@ -17,9 +17,6 @@ export default function NewItem({
   };
 
   const category = categoryData.filter((item) => item.id === categoryId);
-  console.log(categoryData);
-  console.log(categoryId);
-  console.log(category);
   const { color, text } = category[0];
   return (
     <div className={s.itemContainer}>

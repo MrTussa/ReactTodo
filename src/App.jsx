@@ -208,7 +208,6 @@ function App() {
 
   const selectHandler = (choise) => {
     setSelect(choise.value);
-    console.log(choise.value);
   };
   const textHandler = (e) => {
     setText(e.target.value);

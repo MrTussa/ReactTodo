@@ -8,6 +8,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import s from "./AddItemForm.module.css";
 export default function AddItemForm({ options, selectHandler, dateHandler, dateSelected , submitHandler, textHandler}) {
   return (
+    <>
+    <div className={s.background}></div>
     <div  className={s.form}>
       <div className={s.formColumn}>
         <span>Date</span>
@@ -32,12 +34,13 @@ export default function AddItemForm({ options, selectHandler, dateHandler, dateS
         <input
           type="text"
           onChange={textHandler}
-          className={clsx(s.date, s.formSize)}
+          className={clsx(s.date, s.input)}
         />
       </div>
       <div className={s.footerForm}>
         <button onClick={submitHandler}><RadioBtn state="add"/></button>
       </div>
     </div>
+    </>
   );
 }
