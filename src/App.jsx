@@ -45,6 +45,12 @@ function App() {
     {
       id: 1,
       text: "home",
+      color: "100, 100, 100",
+      state: false,
+    },
+    {
+      id: 2,
+      text: "other",
       color: "200, 200, 200",
       state: false,
     },
@@ -186,9 +192,12 @@ function App() {
 
   //Add item
   const addItem = () => {
+    const selectedCategory = select !== "" ? select : "other"
+    const categoryFilter = category.filter((item) => item.text === selectedCategory)
+
     const newItem = {
       id: data[data.length - 1].id + 1,
-      categoryId: select,
+      categoryId: categoryFilter[0].id,
       text: text,
       state: "unchecked",
     };
