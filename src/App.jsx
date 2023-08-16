@@ -1,5 +1,5 @@
 import "./App.css";
-import { List, ListNav, CategoryItem } from "./components";
+import { List, ListNav, CategoryItem, RadioBtn } from "./components";
 import { useState, useRef, useEffect } from "react";
 import AddItemForm from "./components/AddItemForm";
 function App() {
@@ -82,6 +82,7 @@ function App() {
   const dropdownRef = useRef(null);
   
   const [open, setOpen] = useState(false);
+  const [openForm, setOpenForm] = useState(true);
   const currentType = list.filter((item) => item.checked)[0].value;
   const onClickItem = (id) => {
     const newArray = list.map((item) => {
@@ -103,12 +104,28 @@ function App() {
       setOpen(false);
     }
   };
+  const dropdownFormHandler = () => {
+    setOpenForm((prev) => {
+      return !prev;
+    });
+  };
+  const handleClickOutsideForm = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setOpenForm(false);
+    }
+  };
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [open]);
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutsideForm);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutsideForm);
+    };
+  }, [openForm]);
   //DropdownList
 
   //filter state
@@ -192,8 +209,7 @@ function App() {
 
   //Add item
   const addItem = () => {
-    const selectedCategory = select !== "" ? select : "other"
-    const categoryFilter = category.filter((item) => item.text === selectedCategory)
+    const categoryFilter = select !== "" ? category.filter((item) => item.text === selectedCategory) : [{id:2}]
 
     const newItem = {
       id: data[data.length - 1].id + 1,
@@ -257,8 +273,8 @@ function App() {
           inputChange={inputChange}
           onClickState={changeStateHandler}
           deleteTodo={deleteTodo}
-        ></List>
-        <AddItemForm options={optionFormat()} selectHandler={selectHandler} dateHandler={dateHandler} submitHandler={addItem} textHandler={textHandler} dateSelected={date}/>
+        ><li className="addItem" onClick={dropdownFormHandler}><RadioBtn state="add"/></li></List>
+        <AddItemForm dref={dropdownRef} open={openForm} onClick={dropdownFormHandler} options={optionFormat()} selectHandler={selectHandler} dateHandler={dateHandler} submitHandler={addItem} textHandler={textHandler} dateSelected={date}/>
       </div>
     </>
   );

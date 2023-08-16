@@ -1,7 +1,6 @@
-
 .container {
   padding: 40px;
-  font-family: Arial,Helvetica,sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   color: #323232;
   position: relative;
 }
@@ -27,4 +26,20 @@
 }
 .react-datepicker-wrapper {
   width: 7.5em;
+}
+.addItem {
+  width: 24%;
+  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dotted #888888;
+  background-color: #b9cce9a2;
+  border-radius: 8px;
+  text-overflow: clip;
+  cursor: pointer;
+  transition: 0.5s;
+}
+.addItem:hover {
+  outline: 4px auto #646cff;
 }
