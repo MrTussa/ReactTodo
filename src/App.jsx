@@ -3,38 +3,50 @@ import { List, ListNav, CategoryItem, RadioBtn } from "./components";
 import { useState, useRef, useEffect } from "react";
 import AddItemForm from "./components/AddItemForm";
 function App() {
-  const startData = [
-    {
-      id: 0,
-      categoryId: 0,
-      text: "lorem lorem",
-      state: "unchecked",
-    },
-    {
-      id: 1,
-      categoryId: 0,
-      text: "один",
-      state: "unchecked",
-    },
-    {
-      id: 2,
-      categoryId: 1,
-      text: "два",
-      state: "unchecked",
-    },
-    {
-      id: 3,
-      categoryId: 0,
-      text: "три",
-      state: "checked",
-    },
-    {
-      id: 4,
-      categoryId: 0,
-      text: "четыре",
-      state: "removed",
-    },
-  ];
+  const getStorageData = () => {
+    return JSON.parse(localStorage.getItem("todoReact"));
+  };
+  const setStorageData = (data) => {
+    localStorage.setItem("todoReact", JSON.stringify(data));
+  };
+  const startData = () => {
+    if (localStorage.getItem("todoReact") === null) {
+      return [
+        {
+          id: 0,
+          categoryId: 0,
+          text: "lorem lorem",
+          state: "unchecked",
+        },
+        {
+          id: 1,
+          categoryId: 0,
+          text: "один",
+          state: "unchecked",
+        },
+        {
+          id: 2,
+          categoryId: 1,
+          text: "два",
+          state: "unchecked",
+        },
+        {
+          id: 3,
+          categoryId: 0,
+          text: "три",
+          state: "checked",
+        },
+        {
+          id: 4,
+          categoryId: 0,
+          text: "четыре",
+          state: "removed",
+        },
+      ];
+    } else {
+      return getStorageData;
+    }
+  };
   const startCategory = [
     {
       id: 0,
@@ -56,11 +68,11 @@ function App() {
     },
   ];
   const [category, setCategory] = useState(startCategory);
-  const [data, setData] = useState(startData);
+  const [data, setData] = useState(startData());
+  console.log(data);
   const [filteredData, setFilteredData] = useState(data);
-  const [select, setSelect] = useState("")
-  const [date, setDate] = useState(new Date())
-  const [text, setText] = useState("")
+  const [select, setSelect] = useState("");
+  const [text, setText] = useState("");
   //DropdownList
   const [list, setList] = useState([
     {
@@ -80,9 +92,9 @@ function App() {
     },
   ]);
   const dropdownRef = useRef(null);
-  
+
   const [open, setOpen] = useState(false);
-  const [openForm, setOpenForm] = useState(true);
+  const [openForm, setOpenForm] = useState(false);
   const currentType = list.filter((item) => item.checked)[0].value;
   const onClickItem = (id) => {
     const newArray = list.map((item) => {
@@ -130,7 +142,6 @@ function App() {
 
   //filter state
   const filterState = (newArray) => {
-    console.log(data);
     let value = newArray.find((item) => item.checked)?.value;
     value =
       value === "inProgress"
@@ -140,7 +151,6 @@ function App() {
         : value;
     const newData = data.filter((item) => item.state === value);
     const currentCategory = category.find((item) => item.state === true);
-    console.log(filteredData);
     const categoryFilter = currentCategory
       ? newData.filter((item) => item.categoryId === currentCategory.id)
       : undefined;
@@ -199,28 +209,45 @@ function App() {
   const categoryClickHandler = (e) => {
     const index = e.target.dataset.index;
     const objIndex = category.findIndex((obj) => obj.id == index);
-    const newObj = category.map((item) => ({
-      ...item,
-      state: item.id === objIndex ? !item.checked : false,
-    }));
+    let newObj;
+    if (category[objIndex].state === false) {
+      newObj = category.map((item) => ({
+        ...item,
+        state: item.id === objIndex ? !item.checked : false,
+      }));
+    } else {
+      newObj = category.map((item) => ({
+        ...item,
+        state: false,
+      }));
+    }
+    console.log(newObj);
     setCategory(newObj);
   };
   //Category Filter
 
   //Add item
   const addItem = () => {
-    const categoryFilter = select !== "" ? category.filter((item) => item.text === selectedCategory) : [{id:2}]
-
+    if (text === "") {
+      return alert("Text required");
+    }
+    const categoryFilter =
+      select !== ""
+        ? category.filter((item) => item.text === select)
+        : [{ id: 2 }];
+    console.log(categoryFilter);
     const newItem = {
       id: data[data.length - 1].id + 1,
       categoryId: categoryFilter[0].id,
       text: text,
       state: "unchecked",
     };
+    setStorageData([...data, newItem]);
     setData([...data, newItem]);
-    console.log(newItem);
+    setSelect("");
+    setText("");
+    setOpenForm(!openForm);
   };
-  //AddItem
 
   const selectHandler = (choise) => {
     setSelect(choise.value);
@@ -228,15 +255,13 @@ function App() {
   const textHandler = (e) => {
     setText(e.target.value);
   };
-  const dateHandler = (e) => {
-    setDate(e)
-  }
   const optionFormat = () => {
-    return category.map(({text}) => {
-      return {value: text, label: text}
-    })
-  }
+    return category.map(({ text }) => {
+      return { value: text, label: text };
+    });
+  };
   //AddItem
+
   useEffect(() => {
     filterState(list);
   }, [data, list, category]);
@@ -267,14 +292,26 @@ function App() {
             filter={filterState}
           />
         </div>
+        <AddItemForm
+          dref={dropdownRef}
+          open={openForm}
+          onClick={dropdownFormHandler}
+          options={optionFormat()}
+          selectHandler={selectHandler}
+          submitHandler={addItem}
+          textHandler={textHandler}
+        />
         <List
           data={filteredData}
           categories={category}
           inputChange={inputChange}
           onClickState={changeStateHandler}
           deleteTodo={deleteTodo}
-        ><li className="addItem" onClick={dropdownFormHandler}><RadioBtn state="add"/></li></List>
-        <AddItemForm dref={dropdownRef} open={openForm} onClick={dropdownFormHandler} options={optionFormat()} selectHandler={selectHandler} dateHandler={dateHandler} submitHandler={addItem} textHandler={textHandler} dateSelected={date}/>
+        >
+          <li className="addItem" onClick={dropdownFormHandler}>
+            <RadioBtn state="add" />
+          </li>
+        </List>
       </div>
     </>
   );

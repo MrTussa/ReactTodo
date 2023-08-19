@@ -4,6 +4,7 @@ export default function List({children, data, inputChange, onClickState, deleteT
   return (
     <>
       <ul className={s.list}>
+        {children}
         {data.map(({text, state, id, categoryId}) => {
           return (
             <li key={id} className={s.listItem}>
@@ -11,7 +12,6 @@ export default function List({children, data, inputChange, onClickState, deleteT
             </li>
           );
         })}
-        {children}
       </ul>
     </>
   );

@@ -12,17 +12,10 @@
     width: 25px;
     height: 25px;
 }
-.imgDelete {
+.imgWidth {
     width: 27px;
     height: 27px;
 }
-.imgEdit {
-    width: 27px;
-    height: 27px;
-}
-.radioDelete {
-    padding: 0;
-}
-.radioEdit {
+.radioPadding {
     padding: 0;
 }

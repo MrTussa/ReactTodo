@@ -20,12 +20,15 @@ export default function NewItem({
   const { color, text } = category[0];
   return (
     <div className={s.itemContainer}>
+      {
+        !edit &&
       <RadioBtn
         state={btnState}
         onClick={onClickState}
         data={id}
         className={s.button}
       />
+      }
       <div className={s.content}>
         {edit ? (
           <textarea
@@ -44,7 +47,7 @@ export default function NewItem({
           <CategoryItem text={text} color={color} />
         </div>
         <div className={s.editButtons}>
-          <RadioBtn state="edit" onClick={editTodo} data={id} />
+          <RadioBtn state={!edit ? "edit" : "checkmark"} onClick={editTodo} data={id} />
           <RadioBtn state="delete" onClick={deleteTodo} data={id} />
         </div>
       </div>

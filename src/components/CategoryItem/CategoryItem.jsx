@@ -1,4 +1,5 @@
 import s from "./CategoryItem.module.css";
+import clsx from "clsx"
 export default function CategoryItem({
   color,
   categoryClick,
@@ -14,7 +15,7 @@ export default function CategoryItem({
         backgroundColor: "rgba(" + color + ", 0.3)",
       }}
       key={id}
-      className={s.item}
+      className={clsx(s.item, state && s.itemChecked)}
       onClick={categoryClick}
     >
       <span data-index={id} className={s.text}>
