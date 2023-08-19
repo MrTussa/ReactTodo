@@ -61,6 +61,12 @@ function App() {
       state: false,
     },
     {
+      id: 3,
+      text: "daily",
+      color: "0, 253, 169",
+      state: false,
+    },
+    {
       id: 2,
       text: "other",
       color: "200, 200, 200",
@@ -69,7 +75,6 @@ function App() {
   ];
   const [category, setCategory] = useState(startCategory);
   const [data, setData] = useState(startData());
-  console.log(data);
   const [filteredData, setFilteredData] = useState(data);
   const [select, setSelect] = useState("");
   const [text, setText] = useState("");
@@ -221,7 +226,6 @@ function App() {
         state: false,
       }));
     }
-    console.log(newObj);
     setCategory(newObj);
   };
   //Category Filter
@@ -235,7 +239,6 @@ function App() {
       select !== ""
         ? category.filter((item) => item.text === select)
         : [{ id: 2 }];
-    console.log(categoryFilter);
     const newItem = {
       id: data[data.length - 1].id + 1,
       categoryId: categoryFilter[0].id,
