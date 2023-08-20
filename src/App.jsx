@@ -61,15 +61,15 @@ function App() {
       state: false,
     },
     {
-      id: 3,
-      text: "daily",
-      color: "0, 253, 169",
-      state: false,
-    },
-    {
       id: 2,
       text: "other",
       color: "200, 200, 200",
+      state: false,
+    },
+    {
+      id: 3,
+      text: "daily",
+      color: "0, 253, 169",
       state: false,
     },
   ];
@@ -102,19 +102,15 @@ function App() {
   const [openForm, setOpenForm] = useState(false);
   const currentType = list.filter((item) => item.checked)[0].value;
   const onClickItem = (id) => {
-    const newArray = list.map((item) => {
-      return item.id === id
-        ? { ...item, checked: !item.checked }
-        : { ...item, checked: false };
-    });
+    const newArray = list.map((item) =>
+      item.id === id ? { ...item, checked: !item.checked } : { ...item, checked: false }
+    );
     setList(newArray);
     filterState(newArray);
     setOpen(false);
   };
   const dropdownHandler = () => {
-    setOpen((prev) => {
-      return !prev;
-    });
+    setOpen((prev) => !prev);
   };
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -122,9 +118,7 @@ function App() {
     }
   };
   const dropdownFormHandler = () => {
-    setOpenForm((prev) => {
-      return !prev;
-    });
+    setOpenForm((prev) => !prev);
   };
   const handleClickOutsideForm = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -147,31 +141,30 @@ function App() {
 
   //filter state
   const filterState = (newArray) => {
-    let value = newArray.find((item) => item.checked)?.value;
-    value =
+    const value = newArray.find((item) => item.checked)?.value;
+    const filteredValue =
       value === "inProgress"
         ? "unchecked"
         : value === "completed"
         ? "checked"
         : value;
-    const newData = data.filter((item) => item.state === value);
-    const currentCategory = category.find((item) => item.state === true);
+        const currentCategory = category.find((item) => item.state === true);
     const categoryFilter = currentCategory
-      ? newData.filter((item) => item.categoryId === currentCategory.id)
+      ? data.filter((item) => item.categoryId === currentCategory.id)
       : undefined;
+const filteredData =
     categoryFilter === undefined
-      ? setFilteredData(newData)
-      : setFilteredData(categoryFilter);
+      ? data.filter((item) => item.state === filteredValue)
+        : categoryFilter.filter((item) => item.state === filteredValue);
+
+    setFilteredData(filteredData);
   };
   //filter state
 
   //Edit TODO
   const inputChange = (e) => {
-    const {
-      value,
-      dataset: { index },
-    } = e.target;
-    const objIndex = data.findIndex((obj) => obj.id == index);
+    const { value, dataset: { index } } = e.target;
+    const objIndex = data.findIndex((obj) => obj.id === parseInt(index));
     const newData = data.map((obj) =>
       obj.id === objIndex ? { ...obj, text: value } : obj
     );
@@ -181,10 +174,8 @@ function App() {
 
   //Click buttons
   const changeStateHandler = (e) => {
-    const {
-      dataset: { index },
-    } = e.target;
-    const objIndex = data.findIndex((obj) => obj.id == index);
+    const { dataset: { index } } = e.target;
+    const objIndex = data.findIndex((obj) => obj.id === parseInt(index));
     const newData = data.map((obj) => {
       if (obj.id === objIndex) {
         return {
@@ -197,15 +188,13 @@ function App() {
     setData(newData);
   };
   const deleteTodo = (e) => {
-    const {
-      dataset: { index },
-    } = e.target;
-    const objIndex = data.findIndex((obj) => obj.id == index);
-    const newData = data.map((obj) => {
-      return obj.id === objIndex && obj.state !== "removed"
+    const { dataset: { index } } = e.target;
+    const objIndex = data.findIndex((obj) => obj.id === parseInt(index));
+    const newData = data.map((obj) =>
+      obj.id === objIndex && obj.state !== "removed"
         ? { ...obj, state: "removed" }
-        : obj;
-    });
+        : obj
+    );
     setData(newData);
   };
   //Click buttons
@@ -213,7 +202,7 @@ function App() {
   //Category Filter
   const categoryClickHandler = (e) => {
     const index = e.target.dataset.index;
-    const objIndex = category.findIndex((obj) => obj.id == index);
+    const objIndex = category.findIndex((obj) => obj.id === parseInt(index));
     let newObj;
     if (category[objIndex].state === false) {
       newObj = category.map((item) => ({
@@ -245,8 +234,9 @@ function App() {
       text: text,
       state: "unchecked",
     };
-    setStorageData([...data, newItem]);
-    setData([...data, newItem]);
+    const newData = [...data, newItem];
+    setStorageData(newData);
+    setData(newData);
     setSelect("");
     setText("");
     setOpenForm(!openForm);
@@ -259,9 +249,7 @@ function App() {
     setText(e.target.value);
   };
   const optionFormat = () => {
-    return category.map(({ text }) => {
-      return { value: text, label: text };
-    });
+    return category.map(({ text }) => ({ value: text, label: text }));
   };
   //AddItem
 
