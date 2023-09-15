@@ -1,120 +1,28 @@
 import "./App.css";
 import { List, ListNav, CategoryItem, RadioBtn } from "./components";
 import { useState, useRef, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  setFilteredData as setFilteredDataStore,
+  setOpen,
+  setData,
+} from "./store/todoSlice";
 import AddItemForm from "./components/AddItemForm";
 function App() {
-  const getStorageData = () => {
-    return JSON.parse(localStorage.getItem("todoReact"));
-  };
   const setStorageData = (data) => {
     localStorage.setItem("todoReact", JSON.stringify(data));
   };
-  const startData = () => {
-    if (localStorage.getItem("todoReact") === null) {
-      return [
-        {
-          id: 0,
-          categoryId: 0,
-          text: "lorem lorem",
-          state: "unchecked",
-        },
-        {
-          id: 1,
-          categoryId: 0,
-          text: "один",
-          state: "unchecked",
-        },
-        {
-          id: 2,
-          categoryId: 1,
-          text: "два",
-          state: "unchecked",
-        },
-        {
-          id: 3,
-          categoryId: 0,
-          text: "три",
-          state: "checked",
-        },
-        {
-          id: 4,
-          categoryId: 0,
-          text: "четыре",
-          state: "removed",
-        },
-      ];
-    } else {
-      return getStorageData;
-    }
-  };
-  const startCategory = [
-    {
-      id: 0,
-      text: "work",
-      color: "255, 200, 200",
-      state: false,
-    },
-    {
-      id: 1,
-      text: "home",
-      color: "100, 100, 100",
-      state: false,
-    },
-    {
-      id: 2,
-      text: "other",
-      color: "200, 200, 200",
-      state: false,
-    },
-    {
-      id: 3,
-      text: "daily",
-      color: "0, 253, 169",
-      state: false,
-    },
-  ];
-  const [category, setCategory] = useState(startCategory);
-  const [data, setData] = useState(startData());
-  const [filteredData, setFilteredData] = useState(data);
   const [select, setSelect] = useState("");
   const [text, setText] = useState("");
-  //DropdownList
-  const [list, setList] = useState([
-    {
-      id: 0,
-      value: "completed",
-      checked: false,
-    },
-    {
-      id: 1,
-      value: "inProgress",
-      checked: true,
-    },
-    {
-      id: 2,
-      value: "removed",
-      checked: false,
-    },
-  ]);
+  const dispatch = useDispatch();
   const dropdownRef = useRef(null);
-
-  const [open, setOpen] = useState(false);
+  const storeData = useSelector((state) => state.todo.data);
+  const { category, list, open, data } = useSelector((state) => state.todo);
   const [openForm, setOpenForm] = useState(false);
-  const currentType = list.filter((item) => item.checked)[0].value;
-  const onClickItem = (id) => {
-    const newArray = list.map((item) =>
-      item.id === id ? { ...item, checked: !item.checked } : { ...item, checked: false }
-    );
-    setList(newArray);
-    filterState(newArray);
-    setOpen(false);
-  };
-  const dropdownHandler = () => {
-    setOpen((prev) => !prev);
-  };
+
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-      setOpen(false);
+      dispatch(setOpen(false));
     }
   };
   const dropdownFormHandler = () => {
@@ -148,76 +56,17 @@ function App() {
         : value === "completed"
         ? "checked"
         : value;
-        const currentCategory = category.find((item) => item.state === true);
+    const currentCategory = category.find((item) => item.state === true);
     const categoryFilter = currentCategory
-      ? data.filter((item) => item.categoryId === currentCategory.id)
+      ? storeData.filter((item) => item.categoryId === currentCategory.id)
       : undefined;
-const filteredData =
-    categoryFilter === undefined
-      ? data.filter((item) => item.state === filteredValue)
+    const filteredData =
+      categoryFilter === undefined
+        ? storeData.filter((item) => item.state === filteredValue)
         : categoryFilter.filter((item) => item.state === filteredValue);
-
-    setFilteredData(filteredData);
+    dispatch(setFilteredDataStore(filteredData));
   };
   //filter state
-
-  //Edit TODO
-  const inputChange = (e) => {
-    const { value, dataset: { index } } = e.target;
-    const objIndex = data.findIndex((obj) => obj.id === parseInt(index));
-    const newData = data.map((obj) =>
-      obj.id === objIndex ? { ...obj, text: value } : obj
-    );
-    setData(newData);
-  };
-  //Edit TODO
-
-  //Click buttons
-  const changeStateHandler = (e) => {
-    const { dataset: { index } } = e.target;
-    const objIndex = data.findIndex((obj) => obj.id === parseInt(index));
-    const newData = data.map((obj) => {
-      if (obj.id === objIndex) {
-        return {
-          ...obj,
-          state: obj.state === "unchecked" ? "checked" : "unchecked",
-        };
-      }
-      return obj;
-    });
-    setData(newData);
-  };
-  const deleteTodo = (e) => {
-    const { dataset: { index } } = e.target;
-    const objIndex = data.findIndex((obj) => obj.id === parseInt(index));
-    const newData = data.map((obj) =>
-      obj.id === objIndex && obj.state !== "removed"
-        ? { ...obj, state: "removed" }
-        : obj
-    );
-    setData(newData);
-  };
-  //Click buttons
-
-  //Category Filter
-  const categoryClickHandler = (e) => {
-    const index = e.target.dataset.index;
-    const objIndex = category.findIndex((obj) => obj.id === parseInt(index));
-    let newObj;
-    if (category[objIndex].state === false) {
-      newObj = category.map((item) => ({
-        ...item,
-        state: item.id === objIndex ? !item.checked : false,
-      }));
-    } else {
-      newObj = category.map((item) => ({
-        ...item,
-        state: false,
-      }));
-    }
-    setCategory(newObj);
-  };
-  //Category Filter
 
   //Add item
   const addItem = () => {
@@ -236,7 +85,7 @@ const filteredData =
     };
     const newData = [...data, newItem];
     setStorageData(newData);
-    setData(newData);
+    dispatch(setData(newData));
     setSelect("");
     setText("");
     setOpenForm(!openForm);
@@ -255,33 +104,15 @@ const filteredData =
 
   useEffect(() => {
     filterState(list);
-  }, [data, list, category]);
+  }, [list, category, storeData]);
   return (
     <>
       <div className="container">
         <div className="nav">
           <div className="category">
-            {category.map(({ id, text, color, state }) => {
-              return (
-                <CategoryItem
-                  id={id}
-                  text={text}
-                  color={color}
-                  categoryClick={categoryClickHandler}
-                  state={state}
-                />
-              );
-            })}
+            <CategoryItem />
           </div>
-          <ListNav
-            selected={currentType}
-            open={open}
-            onClickItem={onClickItem}
-            onClick={dropdownHandler}
-            dref={dropdownRef}
-            array={list}
-            filter={filterState}
-          />
+          <ListNav dref={dropdownRef} filter={filterState} />
         </div>
         <AddItemForm
           dref={dropdownRef}
@@ -292,13 +123,7 @@ const filteredData =
           submitHandler={addItem}
           textHandler={textHandler}
         />
-        <List
-          data={filteredData}
-          categories={category}
-          inputChange={inputChange}
-          onClickState={changeStateHandler}
-          deleteTodo={deleteTodo}
-        >
+        <List>
           <li className="addItem" onClick={dropdownFormHandler}>
             <RadioBtn state="add" />
           </li>

@@ -1,13 +1,16 @@
 import s from "./CategoryItem.module.css";
-import clsx from "clsx"
-export default function CategoryItem({
-  color,
-  categoryClick,
-  state = false,
-  text,
-  id,
-}) {
-  return (
+import clsx from "clsx";
+import { useSelector, useDispatch } from "react-redux";
+import { setCategoryState } from "../../store/todoSlice";
+export default function CategoryItem({ item }) {
+  const category =
+    item === undefined ? useSelector((state) => state.todo.category) : item;
+  const dispatch = useDispatch();
+  const categoryClick = (item) => {
+    const id = item.target.dataset.index;
+    dispatch(setCategoryState(id));
+  };
+  return category.map(({ id, text, color, state }) => (
     <div
       data-index={id}
       style={{
@@ -22,5 +25,5 @@ export default function CategoryItem({
         {text}
       </span>
     </div>
-  );
+  ));
 }
